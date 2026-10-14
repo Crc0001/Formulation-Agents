@@ -1,0 +1,26 @@
+{
+ "version":"pair-library-v1",
+ "materials":[
+  {"id":"mcc","name":"微晶纤维素","en":"microcrystalline cellulose","aliases":["MCC"],"grades":"PH101/102/200等分别记录，不合并为单一物性"},
+  {"id":"pgs","name":"预胶化淀粉","en":"pregelatinized starch","aliases":["部分预胶化淀粉"],"grades":"区分部分/完全预胶化、植物来源及牌号"},
+  {"id":"lactose","name":"乳糖","en":"lactose","aliases":["一水乳糖","无水乳糖"],"grades":"一水/无水、喷雾干燥/研磨及粒度分别记录"},
+  {"id":"mannitol","name":"甘露醇","en":"mannitol","aliases":[],"grades":"晶型、制备方式及粒度分别记录"},
+  {"id":"starch","name":"原生淀粉","en":"native starch","aliases":["淀粉","玉米淀粉"],"grades":"植物来源及处理历史；不与预胶化淀粉合并"},
+  {"id":"sucrose","name":"蔗糖","en":"sucrose","aliases":[],"grades":"粉末/溶液加入与规格分别记录"},
+  {"id":"dcp","name":"磷酸氢钙","en":"dibasic calcium phosphate","aliases":[],"grades":"无水/二水及压片级别分别记录"},
+  {"id":"ccs","name":"交联羧甲纤维素钠","en":"croscarmellose sodium","aliases":["交联羧甲基纤维素钠"],"grades":"牌号、粒度及内外加比例"},
+  {"id":"ssg","name":"羧甲淀粉钠","en":"sodium starch glycolate","aliases":["羧甲基淀粉钠"],"grades":"类型、取代/交联信息及内外加比例"},
+  {"id":"cpv","name":"交联聚维酮","en":"crospovidone","aliases":["交联聚乙烯吡咯烷酮"],"grades":"类型、粒度及内外加比例"},
+  {"id":"pvp","name":"聚维酮","en":"povidone","aliases":["聚乙烯吡咯烷酮"],"grades":"K值、固体/溶液加入及溶剂"},
+  {"id":"hpc","name":"羟丙纤维素","en":"hydroxypropyl cellulose","aliases":[],"grades":"黏度/分子量；低取代品种不自动归入"},
+  {"id":"hpmc","name":"羟丙甲纤维素","en":"hypromellose","aliases":["羟丙基甲基纤维素"],"grades":"取代类型、黏度及用途"},
+  {"id":"ec","name":"乙基纤维素","en":"ethylcellulose","aliases":[],"grades":"黏度、乙氧基及粉末/分散体"},
+  {"id":"mgst","name":"硬脂酸镁","en":"magnesium stearate","aliases":[],"grades":"脂肪酸组成、水合状态、比表面积及混合时间"},
+  {"id":"ssf","name":"硬脂富马酸钠","en":"sodium stearyl fumarate","aliases":[],"grades":"牌号、粒度及混合历史"},
+  {"id":"silica","name":"胶态二氧化硅","en":"colloidal silicon dioxide","aliases":[],"grades":"亲水/疏水处理、比表面积及用量"},
+  {"id":"sls","name":"十二烷基硫酸钠","en":"sodium lauryl sulfate","aliases":["月桂醇硫酸钠"],"grades":"纯度、加入方式及介质条件"},
+  {"id":"peg","name":"聚乙二醇","en":"polyethylene glycol","aliases":["聚乙二醇6000"],"grades":"分子量、物态与加入方式"},
+  {"id":"talc","name":"滑石粉","en":"talc","aliases":[],"grades":"粒度、表面性质及加入阶段"}
+ ],
+ "relations":[{"materials":["mcc","pgs"],"adapter":"mcc-pgs-conditional-v1","status":"source_quantified","studies":["10.3390/pharmaceutics13060870","CN119792262A","WO2019068367A1"],"note":"三来源分条件；西地那非Q15/DT响应面，TJ0113与维格列汀配对差。目标迁移尚未验证。"}]
+}

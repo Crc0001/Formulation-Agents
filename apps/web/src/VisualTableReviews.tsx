@@ -1,0 +1,6 @@
+import React from 'react';
+export default function VisualTableReviews({pid,evidence}:{pid:string;evidence:any[]}){
+ const entries=evidence.flatMap(e=>{try{const v=JSON.parse(e.fields?.visual_table_json??'null');return v?[{e,v}]:[]}catch{return []}});
+ if(!entries.length)return null;
+ return <details open><summary>原图表格视觉复核（{entries.length}份）</summary><p>整页定位并读取后，复核放大表格；若初读有分歧，最多再读一次。必须有两次一致转录才允许来源计算，全部差异保留。机器复核仍可能出错。</p>{entries.map(({e,v})=><details key={e.id}><summary>{v.table} · {v.status==='machine_agreement'?'两次转录一致，可作来源计算':'有疑点，暂不进入计算'}</summary><p>{e.title} · {e.locator}</p><p>{v.warning}</p><p>采用读取批次：{(v.accepted_read_indices??[0,1]).map((i:number)=>i+1).join("、")}；原始记录全部保留。</p>{v.reason&&<p className={v.status==='machine_agreement'?'callout':'error'}>{v.reason}</p>}<a href={`/api/projects/${pid}/interaction/images/${e.id}`} target="_blank" rel="noreferrer">查看归档原图</a><pre style={{whiteSpace:'pre-wrap'}}>{e.text}</pre>{v.reads?.map((read:any,i:number)=><details key={i}><summary>第{i+1}次视觉转录与疑点</summary><p>{read.issues?.join('；')||'未报告不可读单元格'}</p><table><tbody>{Array.from(new Set<number>(read.cells.map((c:any)=>c.row))).sort((a,b)=>a-b).map(row=><tr key={row}>{read.cells.filter((c:any)=>c.row===row).sort((a:any,b:any)=>a.column-b.column).map((c:any)=><td key={c.column}>{c.text||'—'}</td>)}</tr>)}</tbody></table></details>)}</details>)}</details>
+}

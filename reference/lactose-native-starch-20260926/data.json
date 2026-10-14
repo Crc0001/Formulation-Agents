@@ -1,0 +1,88 @@
+{
+  "version": "lactose-native-starch-v1",
+  "study": "Rizatriptan benzoate 2015",
+  "url": "https://rjpdft.com/HTML_Papers/Research%20Journal%20of%20Pharmaceutical%20Dosage%20Forms%20and%20Technology__PID__2015-7-1-2.html",
+  "doi": "10.5958/0975-4377.2015.00002.6",
+  "locator": "Tables 1–4; F4–F7 only, same co-processing route",
+  "data_kind": "author_fitted_parameter; table means, not raw dissolution points",
+  "raw_sha256": "36ef3d0b0dc3ee2fbc4ab30a7765a4e19854ee3eb452610ea195e20d4ad34b25",
+  "composition": {
+    "api_mg": 10,
+    "lactose_plus_maize_starch_mg": 85,
+    "magnesium_stearate_mg": 4,
+    "SSG_mg": 1,
+    "total_mg": 100
+  },
+  "materials": "α-lactose monohydrate: Qualigens; maize starch: S.D. Fine Chemicals. Native starting material, wet co-processed; not untreated dry blend. PSD not reported.",
+  "process": "Water wet granulation of filler pair; #16; dry 60°C 30min; direct compression 7mm. Pressure unspecified.",
+  "method": "USP II; distilled water 900mL;50rpm;60min;5mL replacement;UV282nm; dissolution temperature/n not specified in paragraph.",
+  "rows": [
+    {
+      "id": "F4",
+      "starch_pair_pct": 40,
+      "k_min_inv": 0.091,
+      "t50_min": 7.5,
+      "t90_min": 25.1,
+      "dt_s": 42,
+      "carr_pct": 25
+    },
+    {
+      "id": "F5",
+      "starch_pair_pct": 30,
+      "k_min_inv": 0.095,
+      "t50_min": 7.271,
+      "t90_min": 24.16,
+      "dt_s": 45,
+      "carr_pct": 23.15
+    },
+    {
+      "id": "F6",
+      "starch_pair_pct": 20,
+      "k_min_inv": 0.124,
+      "t50_min": 5.57,
+      "t90_min": 18.5,
+      "dt_s": 30,
+      "carr_pct": 16.84
+    },
+    {
+      "id": "F7",
+      "starch_pair_pct": 10,
+      "k_min_inv": 0.11,
+      "t50_min": 6.902,
+      "t90_min": 22.93,
+      "dt_s": 45,
+      "carr_pct": 7.59
+    }
+  ],
+  "limitations": [
+    "F7 k=0.110 predicts t50≈6.30min, not reported6.902; k implied by t50≈0.10043. Cannot silently repair.",
+    "Author ranking90:10>80:20 conflicts with table k0.110<0.124.",
+    "Measured tablet weights F4–F7=91.7/93.85/95.1/96.2mg versus nominal100mg; possible additional confounding.",
+    "No digitized raw time–Q points; Q=100(1−exp(−kt)) is reconstruction from author parameter with assumed100% plateau, not measured curve.",
+    "Only four co-processed ratios; no independent batch validation."
+  ],
+  "search_audit": [
+    {
+      "query": "lactose maize starch filler ratio dissolution tablets factorial formulation dissolution data",
+      "channel": "web search",
+      "date": "2026-09-26"
+    },
+    {
+      "query": "piroxicam lactose starch 480 320 160 dissolution F2 F3",
+      "channel": "web search",
+      "date": "2026-09-26"
+    }
+  ],
+  "other_studies": [
+    {
+      "name": "Piroxicam2012 F2/F3",
+      "url": "https://bijps.uobaghdad.edu.iq/index.php/bijps/article/download/451/383",
+      "status": "lactose480→320mg; starch0→160mg; starch botanical source unknown; only graphical time–Q and f2 in retrieved text. Not native-maize coefficient."
+    },
+    {
+      "name": "Chang2008",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2976916/",
+      "status": "Pregelatinized starch; excluded from native-starch parameter pool."
+    }
+  ]
+}

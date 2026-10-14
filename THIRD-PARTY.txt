@@ -1,0 +1,3 @@
+ripgrep: https://github.com/BurntSushi/ripgrep ; license: tools/ripgrep-LICENSE-MIT.txt
+Python dependencies are installed from requirements-trial.lock and retain their package license metadata.
+React/Vite frontend dependencies retain bundled license comments.

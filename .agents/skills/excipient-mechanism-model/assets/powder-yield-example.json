@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "model_id": "linear-powder-yield-v1",
+  "units": {"stress": "kPa", "angle": "deg"},
+  "conditions": {
+    "pre_shear_kPa": 1,
+    "normal_stress_domain_kPa": [0.2, 0.8],
+    "domain_basis": "Reconstruction scenario below source 1 kPa pre-shear; selected evaluation interval, not asserted original measurement coordinates. Source methods pp6–7; Table 7."
+  },
+  "normal_stress_kPa": [0.2, 0.5, 0.8],
+  "arms": [
+    {
+      "id": "unsieved", "material": "Pharmatose 50M", "state": "unsieved; pre-sieving dv50 = 342 um",
+      "parameter_kind": "author_fitted_parameters", "C_kPa": 0.0866, "phi_deg": 29.815,
+      "provenance": {"url": "https://arxiv.org/pdf/2508.16786", "locator": "Table 7, PDF p27; mean fitted parameters"}
+    },
+    {
+      "id": "sieved", "material": "Pharmatose 50M", "state": "fraction >250 um; post-sieving dv50 unknown",
+      "parameter_kind": "author_fitted_parameters", "C_kPa": 0.0543, "phi_deg": 43.035,
+      "provenance": {"url": "https://arxiv.org/pdf/2508.16786", "locator": "Table 7, PDF p27; mean fitted parameters"}
+    }
+  ]
+}

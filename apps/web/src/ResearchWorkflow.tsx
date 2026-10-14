@@ -1,0 +1,10 @@
+import React from 'react';
+export default function ResearchWorkflow({records,variantId,runId}:{records:any[];variantId:string;runId?:string}){
+ const matching=records.filter(w=>w.variant_id===variantId&&w.run_id===runId), w=matching.at(-1);
+ return <section><h2>本轮四步验收</h2>{!w?<p>本轮尚无实际执行记录。历史文字报告不能代替计算验收；启动新研究时程序会自动执行。</p>:<><p>运行 {w.run_id.slice(0,8)} · {new Date(w.created_at).toLocaleString()} · {w.status==='running'?'正在执行计算':w.status==='partial'?'计算已执行，科学判断仍有缺口':w.status}</p><p>{w.completion_note}</p><table><thead><tr><th>步骤</th><th>状态</th><th>执行依据</th></tr></thead><tbody>{w.steps.map((s:any)=><tr key={s.name}><td>{s.name}</td><td>{s.status}</td><td>{!w.mcc_pgs_target&&s.detail.includes('MCC—PGS')?'旧版通用提示不适用于此变化；请以本次处方差异及本轮筛选判断为准。':s.detail}</td></tr>)}</tbody></table>
+ {w.changes?.map((x:any)=><p key={x.name}>{x.name}：{Object.entries(x.fields).map(([k,v]:[string,any])=>`${k==='amount_mg'?'用量mg':k} ${v.before||'未填'} → ${v.after||'未填'}`).join('；')}</p>)}
+ {w.source_fits?.length>0&&<><h3>本轮重新计算的来源溶出</h3><table><thead><tr><th>介质</th><th>拟合RMSE / 百分点</th><th>数值收敛（不等于科学有效）</th></tr></thead><tbody>{w.source_fits.map((f:any)=><tr key={f.profile_id}><td>{f.medium}</td><td>{f.rmse_pp.toFixed(3)}</td><td>{f.converged?'是':'否'}</td></tr>)}</tbody></table></>}
+ {w.holdout_checks?.length>0&&<details><summary>历史方法示例：其它药物崩解剂（非当前用量变化结果）</summary><h3>方法留出检查</h3><p>4%、8%估参，6%留出；时间单位为分钟，指标为t80。不是独立研究验证。</p><table><thead><tr><th>来源物料</th><th>计算</th><th>实测</th><th>偏差</th></tr></thead><tbody>{w.holdout_checks.map((c:any)=><tr key={c.material}><td>{c.material} · {c.grade}</td><td>{c.pred_t80_min.toFixed(2)}</td><td>{c.observed_t80_min}</td><td>{c.error_min.toFixed(2)}</td></tr>)}</tbody></table><p>内加边界：计算{w.challenge.pred_t80_min.toFixed(2)}分钟，实测{w.challenge.observed_t80_min}分钟，原关系不支持该工艺外推。</p></details>}
+ <p>{w.next_action}</p>{w.case_source&&<a href={w.case_source.url} target="_blank" rel="noreferrer">对照研究原文</a>}
+ <details><summary>本轮可追溯计算记录</summary><pre style={{whiteSpace:'pre-wrap'}}>{JSON.stringify(w,null,2)}</pre></details></> }</section>
+}

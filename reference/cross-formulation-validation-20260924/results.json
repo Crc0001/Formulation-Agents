@@ -1,0 +1,174 @@
+{
+  "source_url": "https://doi.org/10.1208/s12249-021-02056-0",
+  "pmcid": "PMC8208916",
+  "identity": "对乙酰氨基酚500mg片剂；双螺杆熔融制粒；150MPa压片、13mm冲模、停留6–7ms；PEG6000黏合；MgSt 1%；外加崩解剂4/6/8%。",
+  "method": "溶出：900mL pH5.8磷酸盐，桨法50rpm，37±0.5℃，n=6。崩解：800mL去离子水，37±1℃，n=6。两项检测介质不同。",
+  "composition_pct": {
+    "4": {
+      "PCM": 84.55,
+      "PEG6000": 9.5,
+      "silica": 0.95,
+      "MgSt": 1,
+      "disintegrant": 4
+    },
+    "6": {
+      "PCM": 82.77,
+      "PEG6000": 9.3,
+      "silica": 0.93,
+      "MgSt": 1,
+      "disintegrant": 6
+    },
+    "8": {
+      "PCM": 80.99,
+      "PEG6000": 9.1,
+      "silica": 0.91,
+      "MgSt": 1,
+      "disintegrant": 8
+    }
+  },
+  "equations": [
+    "ln(DT/min)=alpha+beta*c",
+    "t80/min=a+b*(DT/min)"
+  ],
+  "split": "4%和8%估参，6%整处方留出；已阅读全部资料后的回顾性检查，不是盲测、跨研究验证或独立批次验证。",
+  "records": {
+    "CPV": {
+      "name": "交联聚维酮",
+      "grade": "Kollidon CL-F",
+      "dt_s": [
+        211,
+        129,
+        78
+      ],
+      "dt_sd_s": [
+        27,
+        29,
+        7
+      ],
+      "t80_min": [
+        7.0,
+        5.2,
+        4.2
+      ],
+      "t80_sd_min": [
+        1.3,
+        1.0,
+        0.4
+      ],
+      "parameters": {
+        "alpha": 2.2526628780404403,
+        "beta_per_weight_pp": -0.24878732669661865,
+        "a_min": 2.5578947368421057,
+        "b": 1.263157894736842
+      },
+      "holdout": {
+        "dose_pct": 6,
+        "pred_dt_s": 128.28873683998918,
+        "observed_dt_s": 129.0,
+        "pred_t80_min": 5.258710249262931,
+        "observed_t80_min": 5.2,
+        "error_min": 0.05871024926293078,
+        "conditional_t80_from_measured_dt": 5.273684210526316,
+        "conditional_error_min": 0.07368421052631557
+      }
+    },
+    "CCS": {
+      "name": "交联羧甲纤维素钠",
+      "grade": "Vivasol GF",
+      "dt_s": [
+        435,
+        360,
+        390
+      ],
+      "dt_sd_s": [
+        69,
+        88,
+        93
+      ],
+      "t80_min": [
+        17,
+        15.2,
+        11
+      ],
+      "t80_sd_min": [
+        2.4,
+        3.7,
+        0
+      ],
+      "parameters": {
+        "alpha": 2.0902007608315754,
+        "beta_per_weight_pp": -0.02729982299124799,
+        "a_min": -41.0,
+        "b": 8.0
+      },
+      "holdout": {
+        "dose_pct": 6,
+        "pred_dt_s": 411.8859065323794,
+        "observed_dt_s": 360.0,
+        "pred_t80_min": 13.91812087098392,
+        "observed_t80_min": 15.2,
+        "error_min": -1.2818791290160796,
+        "conditional_t80_from_measured_dt": 7.0,
+        "conditional_error_min": -8.2
+      }
+    },
+    "SSG": {
+      "name": "羧甲淀粉钠",
+      "grade": "Vivastar P",
+      "dt_s": [
+        598,
+        492,
+        513
+      ],
+      "dt_sd_s": [
+        37,
+        67,
+        38
+      ],
+      "t80_min": [
+        32.8,
+        17.7,
+        14.7
+      ],
+      "t80_sd_min": [
+        6.5,
+        3.7,
+        0.8
+      ],
+      "parameters": {
+        "alpha": 2.452561100508393,
+        "beta_per_weight_pp": -0.03832872719496552,
+        "a_min": -94.53882352941181,
+        "b": 12.776470588235298
+      },
+      "holdout": {
+        "dose_pct": 6,
+        "pred_dt_s": 553.8718263280774,
+        "observed_dt_s": 491.99999999999994,
+        "pred_t80_min": 23.403294782802362,
+        "observed_t80_min": 17.7,
+        "error_min": 5.703294782802363,
+        "conditional_t80_from_measured_dt": 10.228235294117624,
+        "conditional_error_min": -7.471764705882375
+      }
+    }
+  },
+  "challenge": {
+    "sample": "CPV总量6%，全部内加",
+    "dt_s": 957,
+    "dt_sd_s": 97,
+    "observed_t80_min": 101,
+    "sd_min": 9.8,
+    "pred_t80_min": 22.705263157894738,
+    "error_min": -78.29473684210527,
+    "status": "外加工艺关系外推失败；该点未用于估参"
+  },
+  "limitations": [
+    "两点确定一条关系，训练误差为零无验证意义。",
+    "只验证崩解时间与t80终点关系，未复验三阶段完整曲线，不由t80反造曲线。",
+    "增加崩解剂伴随API及其他组分比例变化、片重变化，不能归为纯独立贡献。",
+    "不同用量/加入方式会改变孔隙和强度；固定润湿与溶解阶段的假设未被证明。",
+    "来源SD保留为实验离散度，不当作预测区间；不设任意误差合格线。",
+    "不能将对乙酰氨基酚片剂系数直接用于诺氟沙星干法制粒胶囊。"
+  ]
+}

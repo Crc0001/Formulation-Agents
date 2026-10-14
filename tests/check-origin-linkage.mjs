@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {matchingProcesses,originChecklist} from '../apps/web/src/origin-linkage.ts';
+const s=await (await fetch('http://127.0.0.1:2806/api/projects/8c468c31-4043-4899-980d-c75b036f6826')).json();
+const r=s.origin.runs[0].report;
+for(const f of r.formulations.slice(0,3))assert.equal(matchingProcesses(f,r).length,1,f.title);
+const f={title:'CN103705478A实施例1（片剂）',source_ids:['s'],components:[]};
+const p=(scope,source_ids=['s'])=>({title:scope+'工艺',scope,source_ids});
+assert.equal(matchingProcesses(f,{processes:[p('CN103705478A实施例10'),p('CN103705478A对比实施例1'),p('CN103705478A实施例1',['other'])]}).length,0);
+assert.equal(matchingProcesses({...f,title:'无编号'}, {processes:[p('无编号')]}).length,1);
+const audit=originChecklist({...f,batch_units:500,components:[{name:'MgSt',batch_amount:8.4,batch_mass_unit:'g',amount_mg:8.8}]},{processes:[],dissolution_curves:[{formula_title:'原研对照',source_ids:['s']}]});
+assert.equal(audit.curves.length,0);assert.ok(audit.issues.some(x=>x.includes('16.8')&&x.includes('8.8')));
+console.log('Origin linkage: three real candidates matched; example/source separation, quantity conflict and comparator exclusion passed.');

@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {topicEndpoints} from '../apps/web/src/topic-endpoints.ts';
+const s=await(await fetch('http://127.0.0.1:2806/api/projects/8c468c31-4043-4899-980d-c75b036f6826')).json();
+const r=s.interaction.runs.find(r=>r.id==='ccd3b17f-7239-4f03-b854-9f9f6aba7e6e');
+const records=topicEndpoints(s.interaction.evidence,r);
+assert.equal(records.length,3);
+assert.equal(records.flatMap(r=>r.pairs).length,9);
+assert.ok(records.every(r=>r.title.includes('HCTZ')));
+assert.equal(topicEndpoints(s.interaction.evidence,{report:{}}).length,0);
+for(const r of records) for(const p of r.pairs)assert.ok(Math.abs(p.after-p.before-p.difference)<1e-9);
+console.log('Three HCTZ records / nine contrasts verified; unrelated cases excluded.');

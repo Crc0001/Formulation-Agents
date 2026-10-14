@@ -1,0 +1,26 @@
+const assert=require('node:assert/strict');
+const {formulaIngredients,baselineProblem}=require('../apps/web/src/handoff.ts');
+const items=formulaIngredients([{name:'诺氟沙星',compartment:'fill',amount_basis:'unknown',amount_mg:98},{name:'硬脂酸镁',compartment:'fill',amount_basis:'excipient',amount_mg:1.4}],'诺氟沙星');
+assert.equal(items[0].role,'api');assert.equal(items[0].amount_mg,98);assert.equal(items[1].role,'excipient');assert.equal(baselineProblem(items),'');
+assert.ok(baselineProblem(items.map(x=>({...x,role:'excipient'}))));
+assert.ok(baselineProblem([{...items[0],amount_mg:''},items[1]]));
+assert.equal(formulaIngredients([{name:'Unknown',compartment:'fill',amount_basis:'unknown'}],'API')[0].role,'excipient');
+console.log('Handoff identity, unknown mass and invalid input checks passed');
+
+const {researchNormalization}=require('../apps/web/src/handoff.ts');
+const f={components:[{name:'API',compartment:'fill',batch_amount:0.0005,batch_mass_unit:'g'},{name:'MCC',compartment:'fill',batch_amount:89.5,batch_mass_unit:'mg'},{name:'HPC',compartment:'shell',amount_mg:null}]};
+const n=researchNormalization(f,'API','0.5mg');
+assert.deepEqual(n.ingredients.map(x=>x.amount_mg),[.5,89.5]);
+assert.equal(n.screening_scope,'core_or_fill');assert.match(n.fixed_outer_context,/HPC/);assert.match(n.fixed_outer_context,/未知/);
+assert.equal(f.components[2].amount_mg,null);
+assert.deepEqual(researchNormalization(f,'API','1mg').ingredients.map(x=>x.amount_mg),[1,179]);
+assert.equal(researchNormalization(f,'API','0mg'),null);
+assert.equal(researchNormalization({...f,components:[{...f.components[0],amount_basis:'salt'},...f.components.slice(1)]},'API','0.5mg'),null);
+assert.equal(researchNormalization({...f,components:[f.components[0],{...f.components[1],batch_amount:null}]},'API','0.5mg'),null);
+assert.equal(researchNormalization({...f,components:[...f.components,{name:'unknown',compartment:'unknown'}]},'API','0.5mg'),null);
+console.log('normalization guards passed');
+const hydrate=formulaIngredients([{name:'左氧氟沙星半水合物（片芯）',compartment:'unknown',amount_basis:'unknown',amount_mg:512.5},{name:'微晶纤维素（片芯）',compartment:'unknown',amount_mg:45.5},{name:'OPADRY（薄膜包衣）',compartment:'unknown',amount_mg:20},{name:'未分部物料',compartment:'unknown',amount_mg:null}],'左氧氟沙星');
+assert.deepEqual(hydrate.map(x=>x.role),['api','excipient','shell','excipient']);
+assert.deepEqual(hydrate.map(x=>x.amount_mg),[512.5,45.5,20,'']);
+assert.equal(formulaIngredients([{name:'左氧氟沙星杂质',compartment:'unknown'}],'左氧氟沙星')[0].role,'excipient');
+console.log('Unknown-compartment preservation, hydrate identity without mass conversion, explicit coating and missing amount passed');

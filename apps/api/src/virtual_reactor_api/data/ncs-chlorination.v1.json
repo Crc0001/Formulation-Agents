@@ -1,0 +1,337 @@
+{
+  "schemaVersion": "1.5.0",
+  "configId": "ncs-chlorination-demo",
+  "title": "NCS 液相氯化演示",
+  "scope": {
+    "kind": "single_reaction_stage",
+    "selectedRouteId": "ncs_chlorination",
+    "selectedRouteSummary": "同一温度和溶剂条件下的 NCS 竞争氯化教学方案。",
+    "modeledStage": "NCS 滴加与保温反应",
+    "primarySubstrateId": "substrate",
+    "targetProductId": "product",
+    "excludedProcessSteps": [
+      {
+        "position": "after",
+        "label": "分离与纯化",
+        "reason": "本期单反应模型不计算后处理。"
+      }
+    ],
+    "evidenceIds": ["demo_model"]
+  },
+  "materialBalance": {
+    "id": "substrate_origin",
+    "label": "底物 V 来源物种",
+    "basisSpeciesId": "substrate",
+    "sourceEquivalentBySpecies": {
+      "substrate": 1,
+      "product": 1,
+      "n_chloro": 1,
+      "dichloro": 1
+    }
+  },
+  "thermalModel": null,
+  "reaction": {
+    "className": "liquid_phase_ncs_chlorination",
+    "summary": "仅用于演示的竞争氯化模型；其中系数不是实验预测值。",
+    "equation": null
+  },
+  "simulation": {
+    "endMinute": 180,
+    "stepMinute": 0.1,
+    "endMinuteControlId": "reaction_time"
+  },
+  "species": [
+    {
+      "id": "substrate",
+      "name": "底物 V",
+      "role": "substrate",
+      "initialAmount": { "value": 10, "unit": "mmol" },
+      "initialAmountControlId": "substrate_amount",
+      "color": "#4F7CFF"
+    },
+    {
+      "id": "ncs",
+      "name": "NCS",
+      "role": "reagent",
+      "initialAmount": { "value": 0, "unit": "mmol" },
+      "color": "#9B59B6"
+    },
+    {
+      "id": "product",
+      "name": "产物 VI",
+      "role": "product",
+      "initialAmount": { "value": 0, "unit": "mmol" },
+      "color": "#2ECC71"
+    },
+    {
+      "id": "n_chloro",
+      "name": "N-氯代中间体",
+      "role": "intermediate",
+      "initialAmount": { "value": 0, "unit": "mmol" },
+      "color": "#F1C40F"
+    },
+    {
+      "id": "dichloro",
+      "name": "二氯化副产物",
+      "role": "side_product",
+      "initialAmount": { "value": 0, "unit": "mmol" },
+      "color": "#E67E22"
+    }
+  ],
+  "contextMaterials": [],
+  "apparatus": {
+    "kind": "semi_batch",
+    "basis": "derived_teaching",
+    "initialLiquidVolume": { "value": 80, "unit": "mL" },
+    "defaultFinalLiquidVolume": { "value": 100, "unit": "mL" },
+    "maximumModeledLiquidVolume": { "value": 120, "unit": "mL" },
+    "nominalVesselVolume": { "value": 250, "unit": "mL" },
+    "defaultFillFraction": 0.4,
+    "maximumFillFraction": 0.48,
+    "geometryStatus": "unknown",
+    "thermalCapabilityStatus": "unknown",
+    "realEquipmentQualified": false,
+    "limitations": [
+      "教学虚拟设备档案，不构成真实设备选型或安全许可。",
+      "缺少设备几何与混合实验依据，搅拌转速未进入当前定量模型，仅假定液相混合充分。"
+    ]
+  },
+  "controls": [
+    {
+      "id": "temperature",
+      "label": "温度",
+      "kind": "slider",
+      "unit": "degC",
+      "default": { "value": 20, "unit": "degC" },
+      "step": 1,
+      "bands": {
+        "recommended": { "minimum": 15, "maximum": 25 },
+        "valid": { "minimum": 5, "maximum": 40 },
+        "hard": { "minimum": 0, "maximum": 50 }
+      },
+      "description": "升高温度会提高此演示中所有路径的速率因子。"
+    },
+    {
+      "id": "ncs_equivalent",
+      "label": "NCS 当量",
+      "kind": "slider",
+      "unit": "eq",
+      "default": { "value": 1.04, "unit": "eq" },
+      "step": 0.01,
+      "bands": {
+        "recommended": { "minimum": 1, "maximum": 1.1 },
+        "valid": { "minimum": 0.8, "maximum": 1.3 },
+        "hard": { "minimum": 0.5, "maximum": 2 }
+      },
+      "description": "在此演示中，过量 NCS 会增强二氯化副反应路径。"
+    },
+    {
+      "id": "feed_duration",
+      "label": "滴加时间",
+      "kind": "slider",
+      "unit": "min",
+      "default": { "value": 60, "unit": "min" },
+      "step": 5,
+      "bands": {
+        "recommended": { "minimum": 45, "maximum": 90 },
+        "valid": { "minimum": 20, "maximum": 150 },
+        "hard": { "minimum": 5, "maximum": 240 }
+      },
+      "description": "延长滴加时间会降低 NCS 的瞬时可用量。"
+    },
+    {
+      "id": "substrate_amount",
+      "label": "底物投料量",
+      "kind": "slider",
+      "unit": "mmol",
+      "default": { "value": 10, "unit": "mmol" },
+      "step": 0.5,
+      "bands": {
+        "recommended": { "minimum": 8, "maximum": 12 },
+        "valid": { "minimum": 5, "maximum": 15 },
+        "hard": { "minimum": 1, "maximum": 20 }
+      },
+      "description": "直接改变时间零的底物投料量，用于比较规模和试剂相对过量程度。"
+    },
+    {
+      "id": "reaction_time",
+      "label": "反应时间",
+      "kind": "slider",
+      "unit": "min",
+      "default": { "value": 180, "unit": "min" },
+      "step": 5,
+      "bands": {
+        "recommended": { "minimum": 150, "maximum": 210 },
+        "valid": { "minimum": 120, "maximum": 240 },
+        "hard": { "minimum": 60, "maximum": 300 }
+      },
+      "description": "直接改变模拟终点；播放时长保持独立。"
+    }
+  ],
+  "operations": [
+    {
+      "id": "ncs_feed",
+      "kind": "feed",
+      "speciesId": "ncs",
+      "startMinute": 0,
+      "endMinute": 60,
+      "totalAmount": { "value": 10.4, "unit": "mmol" },
+      "amountControlId": "ncs_equivalent",
+      "amountReference": 1.04,
+      "rateControlId": "feed_duration"
+    }
+  ],
+  "reactions": [
+    {
+      "id": "main_path",
+      "label": "目标氯化",
+      "kind": "mass_action",
+      "stoichiometry": { "substrate": -1, "ncs": -1, "product": 1 },
+      "orders": { "substrate": 1, "ncs": 1 },
+      "rateConstantPerMinute": 0.012,
+      "normalizationAmount": { "value": 1.0, "unit": "mmol" },
+      "modifiers": [
+        {
+          "controlId": "temperature",
+          "reference": 20,
+          "coefficient": 0.02,
+          "minimumFactor": 0.5,
+          "maximumFactor": 1.8
+        }
+      ],
+      "pathway": "main",
+      "mechanismSummary": "底物与 NCS 发生目标位点亲电氯化，生成目标产物。",
+      "modelBasis": "derived_teaching",
+      "evidenceIds": ["demo_model"]
+    },
+    {
+      "id": "n_chloro_path",
+      "label": "N-氯化副反应路径",
+      "kind": "mass_action",
+      "stoichiometry": { "substrate": -1, "ncs": -1, "n_chloro": 1 },
+      "orders": { "substrate": 1, "ncs": 1 },
+      "rateConstantPerMinute": 0.002,
+      "normalizationAmount": { "value": 1.0, "unit": "mmol" },
+      "modifiers": [
+        {
+          "controlId": "temperature",
+          "reference": 20,
+          "coefficient": 0.03,
+          "minimumFactor": 0.5,
+          "maximumFactor": 2
+        }
+      ],
+      "pathway": "side",
+      "mechanismSummary": "底物在竞争位点发生 N-氯化，形成可逆或后续转化的中间体。",
+      "modelBasis": "derived_teaching",
+      "evidenceIds": ["demo_model"]
+    },
+    {
+      "id": "dichloro_path",
+      "label": "二氯化",
+      "kind": "mass_action",
+      "stoichiometry": { "product": -1, "ncs": -1, "dichloro": 1 },
+      "orders": { "product": 1, "ncs": 1 },
+      "rateConstantPerMinute": 0.001,
+      "normalizationAmount": { "value": 1.0, "unit": "mmol" },
+      "modifiers": [
+        {
+          "controlId": "ncs_equivalent",
+          "reference": 1.04,
+          "coefficient": 1.5,
+          "minimumFactor": 0.4,
+          "maximumFactor": 2.5
+        }
+      ],
+      "pathway": "side",
+      "mechanismSummary": "目标产物在 NCS 过量时继续氯化，形成二氯化副产物。",
+      "modelBasis": "derived_teaching",
+      "evidenceIds": ["demo_model"]
+    }
+  ],
+  "observables": [
+    {
+      "id": "substrate_fraction",
+      "label": "底物",
+      "kind": "species_fraction",
+      "speciesId": "substrate",
+      "unit": "%"
+    },
+    {
+      "id": "product_fraction",
+      "label": "目标产物",
+      "kind": "species_fraction",
+      "speciesId": "product",
+      "unit": "%"
+    },
+    {
+      "id": "side_fraction",
+      "label": "二氯化副产物",
+      "kind": "species_fraction",
+      "speciesId": "dichloro",
+      "unit": "%"
+    },
+    {
+      "id": "conversion",
+      "label": "转化率",
+      "kind": "conversion",
+      "speciesId": "substrate",
+      "unit": "%"
+    },
+    {
+      "id": "selectivity",
+      "label": "选择性",
+      "kind": "selectivity",
+      "speciesId": "product",
+      "unit": "%"
+    }
+  ],
+  "presentation": {
+    "chartIds": [
+      "composition_trend",
+      "composition_stack",
+      "reaction_network",
+      "composition_table"
+    ],
+    "animationIds": ["batch_vessel", "feed", "stirring", "liquid_color"]
+  },
+  "annotations": [
+    {
+      "id": "feed_started",
+      "severity": "info",
+      "scope": "simulation",
+      "simulationEffect": "none",
+      "title": "NCS 开始滴加",
+      "body": "试剂正在逐步加入；NCS 的瞬时可用量取决于滴加时间。",
+      "trigger": { "kind": "time", "operator": "gte", "value": 0 },
+      "evidenceIds": ["demo_model"]
+    },
+    {
+      "id": "side_path_notice",
+      "severity": "attention",
+      "scope": "simulation",
+      "simulationEffect": "none",
+      "title": "副反应路径已显现",
+      "body": "二氯化产物已超过此演示的关注阈值。",
+      "trigger": {
+        "kind": "species_fraction",
+        "targetId": "dichloro",
+        "operator": "gte",
+        "value": 2
+      },
+      "evidenceIds": ["demo_model"]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "demo_model",
+      "kind": "demo_assumption",
+      "citation": "Phase 0A 工程演示配置；其中系数仍需后续科学审核。",
+      "supports": ["scope", "materialBalance", "reactions", "controls", "annotations"]
+    }
+  ],
+  "confidence": {
+    "level": "low",
+    "summary": "仅用于工程演示。趋势和系数均不是经过验证的实验预测。"
+  }
+}

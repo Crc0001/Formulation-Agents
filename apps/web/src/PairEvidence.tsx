@@ -1,0 +1,8 @@
+import React from 'react';
+export default function PairEvidence({runs,names,target}:{runs:any[];names:Record<string,string>;target:any}){
+ if(target.kind!=='pair')return null;
+ const ids=[...target.material_ids].sort();
+ const reports=runs.map(r=>({r,p:r.report?.interaction_research})).filter(({p})=>p?.pair_synthesis&&[p.pair_synthesis.left_material_id,p.pair_synthesis.right_material_id].sort().join('|')===ids.join('|'));
+ const latest=reports.at(-1);const p=latest?.p;const s=p?.pair_synthesis;
+ return <section><h2>配对研究：两条单辅料变化线＋直接互换线</h2><p>先弄清每种辅料变化时由谁补差，再比较两条效应能否组合。单独的淀粉曲线不代表乳糖—淀粉相互作用已经建立。</p>{!s?<p>旧报告尚未按三条证据线交付综合判断。点击顶部“继续研究”即可按新流程补查乳糖变化及明确互换案例，已有淀粉结果保留。</p>:<><table><thead><tr><th>证据线</th><th>本轮判断</th></tr></thead><tbody><tr><td>{names[s.left_material_id]}变化</td><td>{s.left_evidence_status}</td></tr><tr><td>{names[s.right_material_id]}变化</td><td>{s.right_evidence_status}</td></tr><tr><td>两者直接互换</td><td>{s.direct_exchange_status}</td></tr></tbody></table><p>可比性：{s.comparability}</p><p>主假设：{s.main_hypothesis}</p><p>竞争假设：{s.competing_hypothesis}</p><p>差值关系：{s.difference_equation}</p><p>系数依据：{s.coefficient_basis}</p><p>状态：{s.status==='source_calculated'?'报告声称来源已计算，须核对配对计算记录及审计':s.status==='not_comparable'?'目标迁移或跨体系组合未建立；不影响上方已计算的来源配对差异':'待检验的差值假设，尚未配对求解'}；下一步：{s.next_action}</p></>}{p?.studies?.map((v:any,i:number)=><details key={i}><summary>{({left_change:'左物料变化',right_change:'右物料变化',direct_exchange:'直接等量互换',other:'其它对照',unclassified:'待分类'} as any)[v.evidence_lane??'unclassified']} · {v.response}</summary><p>变化物料：{names[v.changed_material_id]??'见来源条件'}</p><p>补差物料：{v.balancing_material||'未确认'}</p><p>补差依据：{v.balance_basis||'未确认'}</p><p>其它共变：{v.other_changes?.join('；')||'未交付，不能理解为全部固定'}</p><p>{v.observed_relation}</p></details>)}</section>
+}

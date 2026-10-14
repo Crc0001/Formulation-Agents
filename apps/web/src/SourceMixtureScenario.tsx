@@ -1,0 +1,21 @@
+import React,{useState} from 'react';
+import {mixtureScenario} from './mixture-scenario';
+const colors=['#2563eb','#c2410c','#15803d','#7e22ce'];
+export default function SourceMixtureScenario({record}:{record:any}){
+ const pairs=record.pairs.filter((p:any)=>p.mixture);
+ const first=pairs[0]?.mixture;
+ if(!first)return null;
+ return <MixtureChart key={JSON.stringify(pairs)} record={record} pairs={pairs}/>;
+}
+function MixtureChart({record,pairs}:{record:any;pairs:any[]}){
+ const bounds=pairs.map(p=>{const m=p.mixture,t=m.changing_before+m.balancing_before;return [100*m.changing_before/t,100*m.changing_after/t].sort((a,b)=>a-b)});
+ const lo=Math.max(...bounds.map(b=>b[0])),hi=Math.min(...bounds.map(b=>b[1]));
+ const [share,setShare]=useState((lo+hi)/2);
+ if(!(hi>lo)||pairs.some(p=>p.mixture.changing_material!==pairs[0].mixture.changing_material||p.mixture.balancing_material!==pairs[0].mixture.balancing_material))return <p>各组配对物料或区间不同，暂不共用滑块。</p>;
+ const yMax=Math.max(...pairs.flatMap(p=>[p.before,p.after]),1)*1.12;
+ const yMin=Math.min(0,...pairs.flatMap(p=>[p.before,p.after]));
+ const X=(x:number)=>70+650*(x-lo)/(hi-lo),Y=(y:number)=>290-240*(y-yMin)/(yMax-yMin);
+ const rows=pairs.map(p=>({...p,current:mixtureScenario(p.before,p.after,p.mixture,share)}));
+ const curve=(p:any,kind:'linear'|'logLinear')=>Array.from({length:81},(_,i)=>{const x=lo+(hi-lo)*i/80;const r=mixtureScenario(p.before,p.after,p.mixture,x);return r[kind]==null?'':`${i?'L':'M'}${X(x)},${Y(r[kind]!)}`}).join(' ');
+ return <section style={{border:'2px solid #93c5fd',padding:18,borderRadius:12,margin:'18px 0'}}><h3>拖动模拟：两物料等量补差与性能变化</h3><p><strong>来源案例：{record.title}</strong>。端点圆点为文献均值；虚线是端点之间的待验证假设。蓝、橙代表不同工艺条件。</p><p>来源条件：{pairs.map(p=>p.conditions).join("；")}</p><p>这里模拟的是配比与{record.unit==='s'?'崩解时间':'来源响应'}的关系，不是溶出随时间的曲线。</p><label>{pairs[0].mixture.changing_material}占两物料合计比例：<strong>{share.toFixed(1)}%</strong><input style={{width:'100%'}} aria-label="来源配对淀粉比例滑块" type="range" min={lo} max={hi} step="0.5" value={share} onChange={e=>setShare(Number(e.target.value))}/></label><p>另一物料{pairs[0].mixture.balancing_material}占{(100-share).toFixed(1)}%；分母是两物料合计，不是整个处方。</p><svg viewBox="0 0 790 350" role="img" aria-label="文献端点约束的双物料配比响应模拟图" style={{width:'100%',maxWidth:1000,background:'#fff'}}><text x="12" y="25">响应（{record.unit}）</text>{[0,1,2,3,4].map(i=>{const v=yMin+(yMax-yMin)*i/4;return <g key={i}><line x1="70" y1={Y(v)} x2="720" y2={Y(v)} stroke="#e2e8f0"/><text x="12" y={Y(v)+4} fontSize="12">{v.toFixed(1)}</text></g>})}{[0,1,2,3,4].map(i=>{const v=lo+(hi-lo)*i/4;return <text key={i} x={X(v)} y="310" textAnchor="middle">{v.toFixed(0)}%</text>})}<text x="390" y="338" textAnchor="middle">{pairs[0].mixture.changing_material}占配对总量比例（%）</text><line x1={X(share)} y1="50" x2={X(share)} y2="290" stroke="#64748b"/>{rows.map((p,i)=><g key={i}><path d={curve(p,'linear')} fill="none" stroke={colors[i%4]} strokeWidth="2" strokeDasharray="10 5"/><path d={curve(p,'logLinear')} fill="none" stroke={colors[i%4]} strokeWidth="2" strokeDasharray="2 4"/>{[[p.current.x0,p.before],[p.current.x1,p.after]].filter(([x])=>x>=lo&&x<=hi).map(([x,y],j)=><circle key={j} cx={X(x)} cy={Y(y)} r="5" fill={colors[i%4]}/>)}<rect x={X(share)-4} y={Y(p.current.linear)-4} width="8" height="8" fill={colors[i%4]}/>{p.current.logLinear!=null&&<circle cx={X(share)} cy={Y(p.current.logLinear)} r="4" fill="white" stroke={colors[i%4]} strokeWidth="2"/>}</g>)}</svg><p>● 文献端点　长虚线／■ 线性假设　短点线／空心圆 对数线性假设。两种假设之间的差距不是置信区间。</p><table><thead><tr><th>条件与颜色</th><th>变化物料／补差物料</th><th>线性假设（{record.unit}）</th><th>对数线性假设（{record.unit}）</th></tr></thead><tbody>{rows.map((p,i)=><tr key={i}><td><span style={{color:colors[i%4]}}>●</span> {p.conditions}</td><td>{p.current.changing.toFixed(2)}／{p.current.balancing.toFixed(2)} {p.mixture.amount_unit}</td><td>{p.current.linear.toFixed(2)}</td><td>{p.current.logLinear?.toFixed(2)??'不适用'}</td></tr>)}</tbody></table><p><strong>当前应用：</strong>比较假设并安排中间配比验证；优先考察两条假设分歧较大的配比。每组只有两个已知端点，均不能凭端点拟合误差选择胜者，也不能声称整个区间已证实单调。各工艺条件分别验证。</p><details><summary>公式、模型含义与边界</summary><p>x=变化物料/两物料总量×100%；w=(x−x₀)/(x₁−x₀)。线性：Y=(1−w)Y₀+wY₁；对数线性：Y=exp[(1−w)lnY₀+wlnY₁]，仅用于正响应。</p><p>两者均由文献端点约束，曲线形状为假设。固定合计量下，两个用量只有一个独立自由度；这是互换路径关系，不能分离各自贡献或确定相互作用系数。并非二因素响应面。</p><p>用量、API、品牌、制粒和检测条件须保持来源定义。来源颗粒与目标片剂不同，未将崩解时间换算成溶出率；不修改项目处方或实验记录。</p></details></section>;
+}
